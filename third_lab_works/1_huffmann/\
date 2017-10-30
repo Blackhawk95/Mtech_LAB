@@ -1,0 +1,80 @@
+#include <iostream>
+#include <queue>
+#include <vector>
+#include <algorithm>
+#include <iterator>
+
+using namespace std;
+//priority_queue <node,vector<node>,greater<node> > pq;
+
+struct node{
+	char letter;
+	int freq;
+	node *right,*left;
+	node(char letter,int freq){
+		right=left=NULL;
+		this->letter=letter;
+		this->freq=freq;
+	}
+};
+
+class CompareNode {
+	public:
+	bool operator()(node& n1, node& n2)//return true
+	{
+		if(n1.freq >  n2.freq)
+			return true;
+		else
+			return false;
+	}
+};
+
+
+priority_queue <node,vector<node>,CompareNode > pq;
+
+//insert into pq
+void insert_PQ(){
+	//node* newnode=(node*)malloc(sizeof(node*));
+	//node *newnode;
+	//vector<node> *newnode = new vector<node>();
+	char l;
+	int f;
+	cout<<"enter character"<<endl;
+	cin>>l;
+	cout<<"enter freq"<<endl;
+	cin>>f;
+	node* A = new node(l,f);
+	pq.push(*A);
+	
+}
+//to print pq
+void output_PQ(){
+	while(! pq.empty()) {
+	node n = pq.top();
+	cout<<n.letter<<'\t'<<n.freq<<endl;
+	if(n.right!=NULL)
+	{	cout<<"child\t"<<n.right->letter<<'\t'<<n.right->freq;}
+	pq.pop();
+	}
+}
+
+void doTheThing(){
+	node *l,*r;
+	*l=pq.top();
+	pq.pop();
+	*r=pq.top();
+	pq.pop();
+	node* A=new node(' ',*l.freq+*r.freq);
+	//A.left=l;
+	//A.right=r;
+	//pq.push(*A);	
+}
+int  main(){
+	int a=3;
+	while(a>0){
+		insert_PQ();
+		a--;
+	}	
+	//doTheThing();
+	output_PQ();
+}

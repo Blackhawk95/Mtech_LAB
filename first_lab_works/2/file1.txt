@@ -1,0 +1,91 @@
+Commands(utilities)
+1.GeneralPurposecommands:
+date,who,whoamI ,uname,cal ,tty ,stty , echo,pr
+intf ,bc, script ,passwd, finger
+2.FileHandlingutilities:
+Directoryrelatedcommands:pwd, mkdi r , cd, r
+mdi
+Filerelatedcommands:cat ,cp,mv,rm,chmod,chown, 
+chgrp,file,find,ln,ulink,ulimit , umask,
+touch
+3.ProcessRelatedCommands:
+ps,kill,nohup,at ,bat ch,crontab,fg,bg,jobs
+4. Filters:
+cat ,head,tail ,cut ,past e,cmp,comm,diff ,sort ,more,less,pg, tr ,uniqetc....
+5. NetworkRelatedcommands:
+telnet ,ftp,rlogin,arp
+6.Diskandbackuputilites
+Diskutilities : df ,du
+Backup u
+tilities:cpio, tar
+7.Advancedfil
+ter
+s
+grep, sed, awk
+1.
+Write a grep command that selects the lines from the file1 that have at least three 
+characters.
+2.
+Writeagrepcommandthatselectsthelinesfromthefile1th
+atdonot startwit
+h 
+At oG
+3.
+Writeasedcommandthatswaps
+t
+hefirstandsecondcharacterineachlinein thefile
+.
+4.
+Writeanawkprogram 
+toprintthefields1and4ofafilethatispassedascommandLineargument.Thefilecontainsline
+sofinformationthatisseparatedby“,”asdelimeter.Theawkprogram
+mustprintattheendtheaverageofall4
+th
+fielddata
+.
+5.
+WriteaCprogram toimplement„cat‟commandusingsystem calls
+.
+6.
+WriteaCprogram toimplement„ls‟commandusingsystem calls
+.
+SHELL PROGRAMMING
+1.
+Write a script to continually monitor all running processes and to keep 
+track of how many 
+childprocesses each parent spawns.  If  a process spawns more than  five  children, then the 
+script  sends  ane
+-
+mail  to  the  system  administrator  (or 
+root
+)  with  all  relevant  information, 
+including the time, PID ofthe parent, PIDs of the children
+, etc. The script appends a report 
+to a log file every ten minutes.
+2. 
+Write  a  script  to  check  and  validate  passwords.  The  object  is  to  flag  "weak"  or  easily 
+guessedpassword  candidates.A  trial  password  will  be  input  to  the  script  as  a  command
+-
+line 
+paramet
+er.  To  be  consideredacceptable,  a  password  must  meet  the  following  minimum 
+qualifications:
+• Minimum length of 8 characters
+• Must contain at least one numeric character
+• Must contain at least one of the following non
+-
+alphabetic characters: @, #, $, %, &,
+*, +, 
+-
+, 
+=
+• Do a dictionary check on every sequence of at least four consecutive alphabetic characters 
+inthe password under test. This will eliminate passwords containing embedded "words" 
+foundin a standard dictionary.
+3. 
+Write a script that calculates determinants by recursively expanding the 
+minors
+. Use a 
+4x
+4determinant as a test case.
+

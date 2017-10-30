@@ -1,0 +1,264 @@
+#include<iostream>
+#include<stdlib.h>
+using namespace std;
+
+class account {
+	int ano;
+	float amt;
+	public:
+	
+	account *next;
+	account(){//constructor
+		ano=0;
+		amt=0;
+		next=NULL;
+	}
+	int a_no_ret(){
+			return ano;
+	}
+	void a_no_set(int x){
+			ano=x;
+	}
+	float amt_ret(){
+		return amt;
+	}
+	void amt_set(int x){
+		amt=x;
+	}	
+	void deposit(){ float deposit;
+			cout<<"Enter Deposit"<<endl;
+			cin>>deposit;
+			amt=amt+deposit;
+			cout<<"ACC NO: "<<ano<<endl;
+			cout<<"New Balance: "<<amt<<endl;
+	}
+	void balance_enquiry(){
+			cout<<"Balance: "<<amt<<endl;
+	}
+	void withdrawl(){float tmp;
+			cout<<"Enter amt to be withdrawed:"<<endl;
+			cin>>tmp;
+			if(amt-tmp>0)
+			{	amt=amt-tmp;
+				cout<<"ACC NO: "<<ano<<endl;
+				cout<<"Amt after deduction is: "<<amt<<endl;
+			}
+			else
+			{	cout<<"Sufficient balance not found:"<<endl;
+			}
+	}
+	//close and verification of existance is carried out by linked list system
+	void interest(int rate){
+			amt=amt+((amt*rate)/100);
+	}
+
+	void print(){
+		cout<<ano<<'\t'<<amt<<'\n';
+	}
+}*head;
+
+int count_account(account* &head){ //to count no of elements in a linked list
+		account* start;
+		int count=1;
+		start=head;
+		while(start){
+		start=start->next;
+		count++;	
+		}
+		return(count);
+}
+
+int account_number_provider(account* &head){ //an ineffcient algo to find the unused accno(brute force)
+	int available[10]={101,102,103,104,105,106,107,108,109,110};
+	int atmp=0;
+	int FLAG=0;
+	account* start;
+	for(int i=0;i<10;i++){
+		start=head;
+		FLAG=0;
+		while(start){
+		atmp=start->a_no_ret();
+		if(available[i]==atmp)
+			FLAG=1;
+		start=start->next;
+		}
+		if(FLAG==0)	
+			return available[i];
+	}
+}
+
+
+void create_account(account* &head){
+	if(head==NULL)//first element
+	{	account* new_node=(account*)malloc(sizeof(account*));
+		new_node->deposit();
+		new_node->a_no_set(101);
+		new_node->next=NULL;
+		cout<<"Your Account No. is "<<new_node->a_no_ret();
+		head=new_node;
+	}
+	else{ //after first element
+		if(count_account(head) <= 10){ //less than 10 only it will work
+				account* new_node=(account*)malloc(sizeof(account*));
+				account* p;//create a ptr
+				p=head;
+				new_node->deposit();
+				new_node->a_no_set(account_number_provider(head));
+				new_node->next=NULL;
+				cout<<"Your Account No. is "<<new_node->a_no_ret();
+				while(p && p->next){
+					p=p->next;
+				}
+				p->next=new_node;
+				}
+		else
+		{		//no space
+				cout<<"NO MORE ACCOUNT POSSIBLE"<<endl;
+				return;
+		}
+	}
+}
+
+int close_account(account* &p,account* &head){
+	if(p && p->next){//now i got it
+		account *tmp;
+		tmp=p->next;
+		p->a_no_set(tmp->a_no_ret());
+		p->amt_set(tmp->amt_ret());
+		p->next=tmp->next;
+		tmp=NULL;
+		return 1;
+	}
+	else if(p && !(p->next)){
+		account *tmp;
+		tmp=head;
+		while(tmp && tmp->next && tmp->next->next){
+		tmp=tmp->next;
+		}
+		tmp->next=NULL;
+		p=NULL;
+		head=NULL;
+		return 1;
+	}
+		return 0;
+}
+
+//TO DO....rest other than account creation;
+//
+//TO play with balance given an account number
+void balance_account_operation(account* &head,char input){
+	int accno,tmp;
+	int FLAG=0;//for knowing whther we found account or not
+	//check a way to pass in account number too
+	cout<<"Enter Account number?: ";
+	cin>>accno;
+	account *p;
+	p=head;
+	while(p){
+		tmp=p->a_no_ret();
+		if(tmp==accno){
+			cout<<"ACC NO: "<<tmp<<endl;
+				switch(input){
+				case 'B':p->balance_enquiry();
+					 break;
+				case 'D':p->deposit();
+					 break;
+				case 'W':p->withdrawl();
+					 break;
+				case 'C':if(close_account(p,head))
+					 	cout<<"Succesfully closed the account"<<endl;
+					 else
+						cout<<"Operation failed"<<endl; 
+					 break;	 
+			
+			}
+			FLAG=1;
+		}
+		p=p->next;
+	}
+	if(FLAG==0)
+		cout<<"ACC NOT FOUND!!"<<endl;
+}
+
+void all_account_interest_operation(account* &head,int rate){
+	int count=0;
+	account* p;
+	p=head;
+	while(p){
+	p->interest(rate);
+	p=p->next;
+	count++;
+	}
+	cout<<"Interest computed and added to amt for "<<count<<" accounts"<<endl;
+}
+
+void all_account_operation(account* &head,char input){
+	account* p;
+	int count=0;
+	p=head;
+	if(input=='P')
+		cout<<"sl.no\tAcc.No\tAmount"<<endl;
+	//cout<<"test1";
+	while(p){
+		switch(input){
+			case 'P':count++;
+			         cout<<count<<'\t';
+				 p->print();
+				 p=p->next;
+				 break;
+			case 'E':if(close_account(p,head))
+				 	cout<<"Account closed"<<endl;
+				 else
+					cout<<"Account not closed";
+				 exit(0);
+				 break;	 
+		}
+	}
+}
+
+int main(){
+	char input;
+	int rate=0;		
+	cout<<"hello world"<<endl;
+	
+	while(1){
+		system("clear");
+		cout<<"\t\t\tTHE BANK"<<endl<<endl;
+		cout<<"\tOPEN ACCOUNT : To Open an account, press 'O'"<<endl;
+		cout<<"\tBALANCE : To Check balance, press 'B'"<<endl;
+		cout<<"\tDEPOSIT : To Deposit money, press 'D'"<<endl;
+		cout<<"\tWITHDRAW : To Withdraw money, press 'W'"<<endl;
+		cout<<"\tCLOSE ACCOUNT : To Close an account, press 'C'"<<endl;
+		cout<<"\tQUIT PROGRAM : To quit, press 'Q'";
+		cout<<endl<<endl;
+		cout<<"\tINTEREST FOR ALL : press 'I'"<<endl;
+		cout<<"\tPRINT ALL : press 'P'"<<endl;
+		cout<<"\tCLOSE ALL & EXIT : press 'E'"<<endl;
+		cout<<"\n\nENTER YOUR CHOICE: ";
+		cin>>input;
+
+		if(input=='D' || input=='W' ||  input=='B' ||  input=='C'){
+			balance_account_operation(head,input);
+		}
+		else if(input=='O')
+			create_account(head);
+		else if(input=='P' || input=='E')
+			all_account_operation(head,input);
+		else if(input=='I'){
+			cout<<"Enter Interest Rate"<<endl;
+			cin>>rate;
+			all_account_interest_operation(head,rate);
+		}
+		else if(input=='Q'){
+			system("clear");
+			exit(0);
+		}
+		else
+			cout<<"Wrong Choice"<<endl;
+
+		cout<<"\nPRESS ENTER TO CONTINUE....\t\t\t\t\n";
+		system("read");
+}
+			
+	return 0;
+}
