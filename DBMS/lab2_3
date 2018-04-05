@@ -1,0 +1,185 @@
+
+
+creating tables
+
+create table employee(emp_id integer not null,emp_name varchar(100) not null, primary key(emp_id));
+create table department(dept_id integer not null,dept_name varchar(100) not null, primary key(dept_id));
+create table paydetails(emp_id integer not null,dept_id integer not null,basic integer not null,deductions integer not null,additions integer not null,DOJ date not null,foreign key(emp_id) references employee(emp_id),foreign key(dept_id) references department(dept_id));
+create table payroll(emp_id integer not null,pay_date date not null,foreign key(emp_id) references employee(emp_id));
+
+tables
+
++------------------------+
+| Tables_in_lab2_payroll |
++------------------------+
+| department             |
+| employee               |
+| paydetails             |
+| payroll                |
++------------------------+
+
+1.
+entering data
+
+insert into employee(emp_id,emp_name) values(1,"a"),(2,"b"),(3,"c"),(4,"d"),(5,"e"),(6,"f"),(7,"g"),(8,"h"),(9,"i"),(10,"j"),(11,"k"),(12,"l");
+insert into department(dept_id,dept_name) values(1,"aa"),(2,"bb"),(3,"cc"),(4,"dd"),(5,"ee"),(6,"ff"),(7,"gg"),(8,"hh"),(9,"ii"),(10,"jj");
+
+insert into paydetails(emp_id,dept_id,basic,deductions,additions,DOJ) values(1,1,5000,100,200,'2017-12-01');
+insert into paydetails(emp_id,dept_id,basic,deductions,additions,DOJ) values(2,2,6000,100,200,'2017-11-01');
+insert into paydetails(emp_id,dept_id,basic,deductions,additions,DOJ) values(3,3,7000,100,200,'2017-05-01');
+insert into paydetails(emp_id,dept_id,basic,deductions,additions,DOJ) values(4,4,8000,100,200,'2016-12-01');
+insert into paydetails(emp_id,dept_id,basic,deductions,additions,DOJ) values(5,5,9000,100,200,'2016-11-01');
+insert into paydetails(emp_id,dept_id,basic,deductions,additions,DOJ) values(6,6,10000,100,200,'2016-05-01');
+insert into paydetails(emp_id,dept_id,basic,deductions,additions,DOJ) values(7,7,11000,100,200,'2015-12-01');
+insert into paydetails(emp_id,dept_id,basic,deductions,additions,DOJ) values(8,8,12000,100,200,'2015-11-01');
+insert into paydetails(emp_id,dept_id,basic,deductions,additions,DOJ) values(9,9,13000,100,200,'2015-05-01');
+insert into paydetails(emp_id,dept_id,basic,deductions,additions,DOJ) values(10,10,14000,100,200,'2014-12-01');
+insert into paydetails(emp_id,dept_id,basic,deductions,additions,DOJ) values(11,1,18000,100,200,'2010-12-01');
+insert into paydetails(emp_id,dept_id,basic,deductions,additions,DOJ) values(12,1,25000,100,200,'2010-01-01');
+
+insert into payroll(emp_id,pay_date) values(1,'2018-01-01'),(2,'2018-01-01'),(3,'2018-01-01'),(4,'2018-01-01'),(5,'2018-01-01'),(6,'2018-01-01');
+insert into payroll(emp_id,pay_date) values(11,'2018-01-01'),(12,'2018-01-01'),(7,'2018-01-01'),(8,'2018-01-01'),(9,'2018-01-01'),(10,'2018-01-01');
+
+Table with data
+
+employee
+
++--------+----------+         
+| emp_id | emp_name |         
++--------+----------+         
+|      1 | a        |         
+|      2 | b        |         
+|      3 | c        |         
+|      4 | d        |         
+|      5 | e        |         
+|      6 | f        |         
+|      7 | g        |         
+|      8 | h        |         
+|      9 | i        |         
+|     10 | j        |         
+|     11 | k        |         
+|     12 | l        |         
++--------+----------+  
+
+department
+
++---------+-----------+
+| dept_id | dept_name |
++---------+-----------+
+|       1 | aa        |
+|       2 | bb        |
+|       3 | cc        |
+|       4 | dd        |
+|       5 | ee        |
+|       6 | ff        |
+|       7 | gg        |
+|       8 | hh        |
+|       9 | ii        |
+|      10 | jj        |
++---------+-----------+
+
+paydetails
+
++--------+---------+-------+------------+-----------+------------+
+| emp_id | dept_id | basic | deductions | additions | DOJ        |
++--------+---------+-------+------------+-----------+------------+
+|      1 |       1 |  5000 |        100 |       200 | 2017-12-01 |
+|      2 |       2 |  6000 |        100 |       200 | 2017-11-01 |
+|      3 |       3 |  7000 |        100 |       200 | 2017-05-01 |
+|      4 |       4 |  8000 |        100 |       200 | 2016-12-01 |
+|      5 |       5 |  9000 |        100 |       200 | 2016-11-01 |
+|      6 |       6 | 10000 |        100 |       200 | 2016-05-01 |
+|      7 |       7 | 11000 |        100 |       200 | 2015-12-01 |
+|      8 |       8 | 12000 |        100 |       200 | 2015-11-01 |
+|      9 |       9 | 13000 |        100 |       200 | 2015-05-01 |
+|     10 |      10 | 14000 |        100 |       200 | 2014-12-01 |
+|     11 |       1 | 18000 |        100 |       200 | 2010-12-01 |
+|     12 |       1 | 25000 |        100 |       200 | 2010-01-01 |
++--------+---------+-------+------------+-----------+------------+
+
+payroll
+
++--------+------------+      
+| emp_id | pay_date   |      
++--------+------------+      
+|      1 | 2018-01-01 |      
+|      2 | 2018-01-01 |      
+|      3 | 2018-01-01 |      
+|      4 | 2018-01-01 |      
+|      5 | 2018-01-01 |      
+|      6 | 2018-01-01 |      
+|     11 | 2018-01-01 |      
+|     12 | 2018-01-01 |      
+|      7 | 2018-01-01 |      
+|      8 | 2018-01-01 |      
+|      9 | 2018-01-01 |      
+|     10 | 2018-01-01 |      
++--------+------------+ 
+
+2.
+select employee.emp_id,employee.emp_name,department.dept_id,department.dept_name from employee,department,paydetails p where p.emp_id=employee.emp_id && p.dept_id=department.dept_id order by (p.dept_id);
+
++--------+----------+---------+-----------+
+| emp_id | emp_name | dept_id | dept_name |
++--------+----------+---------+-----------+
+|      1 | a        |       1 | aa        |
+|     11 | k        |       1 | aa        |
+|     12 | l        |       1 | aa        |
+|      2 | b        |       2 | bb        |
+|      3 | c        |       3 | cc        |
+|      4 | d        |       4 | dd        |
+|      5 | e        |       5 | ee        |
+|      6 | f        |       6 | ff        |
+|      7 | g        |       7 | gg        |
+|      8 | h        |       8 | hh        |
+|      9 | i        |       9 | ii        |
+|     10 | j        |      10 | jj        |
++--------+----------+---------+-----------+
+
+3.
+select employee.emp_id,employee.emp_name,department.dept_id,department.dept_name,p.basic from employee,department,paydetails p where p.emp_id=employee.emp_id && p.dept_id=department.dept_id && p.basic > 10000 && p.basic <20000;
++--------+----------+---------+-----------+-------+
+| emp_id | emp_name | dept_id | dept_name | basic |
++--------+----------+---------+-----------+-------+
+|      7 | g        |       7 | gg        | 11000 |
+|      8 | h        |       8 | hh        | 12000 |
+|      9 | i        |       9 | ii        | 13000 |
+|     10 | j        |      10 | jj        | 14000 |
+|     11 | k        |       1 | aa        | 18000 |
++--------+----------+---------+-----------+-------+
+
+4.
+select department.dept_id,department.dept_name,count(employee.emp_id) from employee,department,paydetails p where p.emp_id=employee.emp_id && p.dept_id=department.dept_id group by department.dept_id;
++---------+-----------+------------------------+
+| dept_id | dept_name | count(employee.emp_id) |
++---------+-----------+------------------------+
+|       1 | aa        |                      3 |
+|       2 | bb        |                      1 |
+|       3 | cc        |                      1 |
+|       4 | dd        |                      1 |
+|       5 | ee        |                      1 |
+|       6 | ff        |                      1 |
+|       7 | gg        |                      1 |
+|       8 | hh        |                      1 |
+|       9 | ii        |                      1 |
+|      10 | jj        |                      1 |
++---------+-----------+------------------------+
+
+5.
+select employee.emp_name,(p.basic-p.deductions+p.additions) as netsalary from employee,department,paydetails p where p.emp_id=employee.emp_id && (p.basic-p.deductions+p.additions ) > 10000 && p.dept_id=department.dept_id group by employee.emp_id;
++----------+-----------+
+| emp_name | netsalary |
++----------+-----------+
+| f        |     10100 |
+| g        |     11100 |
+| h        |     12100 |
+| i        |     13100 |
+| j        |     14100 |
+| k        |     18100 |
+| l        |     25100 |
++----------+-----------+
+
+
+
+
+

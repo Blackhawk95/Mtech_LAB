@@ -1,0 +1,176 @@
+
+Student
+
++-----+-------+-------+-------------+-----+
+| sno | sname | major | level       | age |
++-----+-------+-------+-------------+-----+
+|   1 | aa    | CSE   | First Year  |  18 |
+|   2 | bb    | DA    | Second Year |  18 |
+|   3 | cc    | DA    | Third Year  |  20 |
+|   4 | dd    | CSE   | Second Year |  19 |
+|   5 | ee    | ME    | Fourth Year |  22 |
+|   6 | ff    | CSE   | Third Year  |  21 |
+|   7 | gg    | CSE   | Second Year |  19 |
+|   8 | hh    | ME    | Second Year |  19 |
+|   9 | ii    | ME    | Third Year  |  20 |
+|  10 | jj    | ME    | Third Year  |  21 |
+|  11 | kk    | ME    | Second Year |  19 |
++-----+-------+-------+-------------+-----+
+
+Class
+
++-------+------+-----+
+| cname | room | fid |
++-------+------+-----+
+| cc    | R128 |   1 |
+| ml    | R128 |   2 |
+| nlp   | R129 |   3 |
+| tom   | R130 |   4 |
+| add   | R128 |   5 |
++-------+------+-----+
+
+Enrolled
+
++-----+-------+
+| sno | cname |
++-----+-------+
+|   1 | cc    |
+|   2 | nlp   |
+|   5 | tom   |
+|   3 | ml    |
+|   6 | cc    |
+|   7 | add   |
+|   8 | tom   |
+|   9 | tom   |
+|  10 | tom   |
+|  11 | tom   |
++-----+-------+
+
+Faculty
+
++-----+-------+--------+
+| fid | fname | deptid |
++-----+-------+--------+
+|   1 | aaa   |      1 |
+|   2 | bbb   |      2 |
+|   3 | ccc   |      2 |
+|   4 | ddd   |      3 |
+|   5 | eee   |      2 |
++-----+-------+--------+
+
+1.
+select distinct Student.sname from Student,Class,Enrolled,Faculty where Student.level = "Third Year" && Faculty.fname = "aaa" && Student.sno=Enrolled.sno && Enrolled.cname=Class.cname && Class.fid = Faculty.fid;
+
++-------+
+| sname |
++-------+
+| ff    |
++-------+
+
+2.
+select distinct Student.sname from Student,Class,Enrolled,Faculty where (Student.major = "CSE" or Faculty.fname = "aaa") && Student.sno=Enrolled.sno && Enrolled.cname=Class.cname && Class.fid = Faculty.fid;
++-------+
+| sname |
++-------+
+| aa    |
+| ff    |
+| gg    |
++-------+
+
+3.
+select b.cname from Student a,Class b,Enrolled c,Faculty d where (b.room = "R128" or (select count(e.sname) from Student e where a.sno=e.sno) >= 5)  && a.sno=c.sno && c.cname=b.cname && b.fid = d.fid;
+
++-------+
+| cname |
++-------+
+| cc    |
+| ml    |
+| cc    |
+| add   |
++-------+
+
+4.
+select b.fname,a.room from Class a,Faculty b where a.fid=b.fid;
+
++-------+------+
+| fname | room |
++-------+------+
+| aaa   | R128 |
+| bbb   | R128 |
+| ccc   | R129 |
+| ddd   | R130 |
+| eee   | R128 |
++-------+------+
+
+5.
+select f.fname,count(e.sno) as `combined enrollment` from Enrolled e,Class c,Faculty f where e.cname=c.cname && c.fid = f.fid group by c.fid having `combined enrollment` < 2;
++-------+---------------------+
+| fname | combined enrollment |
++-------+---------------------+
+| bbb   |                   1 |
+| ccc   |                   1 |
+| eee   |                   1 |
++-------+---------------------+
+
+6.
+select s1.level,avg(s1.age) from Student s1 group by s1.level;
+
++-------------+-------------+
+| level       | avg(s1.age) |
++-------------+-------------+
+| First Year  |     18.0000 |
+| Fourth Year |     22.0000 |
+| Second Year |     18.8000 |
+| Third Year  |     20.5000 |
++-------------+-------------+
+
+7.
+select s1.level,avg(s1.age) from Student s1 where s1.level<> "Third Year" group by s1.level;
++-------------+-------------+
+| level       | avg(s1.age) |
++-------------+-------------+
+| First Year  |     18.0000 |
+| Fourth Year |     22.0000 |
+| Second Year |     18.8000 |
++-------------+-------------+
+
+8.
+select s.sname,count(e.cname) as c from Student s,Enrolled e where s.sno=e.sno group by s.sname having c = (select max(a.c) from (select s.sname,count(e.cname) as c from Student s,Enrolled e where s.sno=e.sno group by s.sno order by c desc ) a);
++-------+---+
+| sname | c |
++-------+---+
+| aa    | 1 |
+| bb    | 1 |
+| cc    | 1 |
+| ee    | 1 |
+| ff    | 1 |
+| gg    | 1 |
+| hh    | 1 |
+| ii    | 1 |
+| jj    | 1 |
+| kk    | 1 |
++-------+---+
+
+9.
+select s.sname from Student s where s.sno not in (select e.sno from Enrolled e);
++-------+
+| sname |
++-------+
+| dd    |
++-------+
+
+10.
+select count(s.sno),s.level from Student s,Enrolled e where s.sno=e.sno && s.age<20 group by s.level;
++--------------+-------------+
+| count(s.sno) | level       |
++--------------+-------------+
+|            1 | First Year  |
+|            4 | Second Year |
++--------------+-------------+
+
+temp 
+
+insert into Student(sno,sname,major,level,age) values(5,"ee","ME",4,22);
+insert into Class(cname,room,fid) values("tom","R130",4);
+insert into Enrolled (sno,cname) values(5,"tom");
+insert into Faculty (fid,fname,deptid) values(4,"ddd",3);

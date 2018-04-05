@@ -1,0 +1,156 @@
+
+insert into Employee values(103,"Q","QQQ","q4@email.com","aaa","CFO",'1995-09-19',9999999997);
+
+1.
+
+create trigger count_entries after insert on Employee
+for each row set @count = @count + 1;
+
+set @count = 0;
+insert into Employee values(101,"J","JJJ","j4@email.com","aaa","CEO",'1995-09-20',9999999999);
+select @count as sum;
++------+
+| sum  |
++------+
+|    1 |
++------+
+
+2.
+
+create procedure two_pro()
+begin
+	select 'Hey, Inserted 1 entry :) ';
+end//
+
+
+create trigger two before insert on Employee
+for each row call `'Hey, Inserted 1 entry :)'`;
+
+ERROR 1305 (42000): PROCEDURE 5_triggers.'Hey, Inserted 1 entry :)' does not exist
+
+3.
+/*need to test it later
+create procedure three_pro()
+begin
+	update Employee set Phone_no = concat('+91', Phone_no);
+end//
+
+create trigger three before insert on Employee
+for each row call three_pro(); 
+
+/*
+
+create trigger three before insert on Employee
+for each row set new.Phone_no = concat('+91',new.Phone_no); 
+
+insert into Employee values(105,"F","FFF","f4@email.com","aaa","CSO",'1995-09-17',9999999995);
+
+//not possible --  can do for 1
+
++-------+----------+-----------+--------------+------------+-------------+------------+---------------+
+| Empid | Lastname | Firstname | Email        | Department | Designation | DOJ        | Phone_no      |
++-------+----------+-----------+--------------+------------+-------------+------------+---------------+
+|   102 | K        | KKK       | k4@email.com | aaa        | COO         | 1995-09-21 | 9999999998    |
+|   101 | J        | JJJ       | j4@email.com | aaa        | CEO         | 1995-09-20 | 9999999999    |
+|   103 | Q        | QQQ       | q4@email.com | aaa        | CFO         | 1995-09-19 | 9999999997    |
+|   104 | T        | TTT       | t4@email.com | aaa        | CRO         | 1995-09-18 | 9999999996    |
+|   105 | F        | FFF       | f4@email.com | aaa        | CSO         | 1995-09-17 | +919999999995 |
++-------+----------+-----------+--------------+------------+-------------+------------+---------------+
+
+
+
+4.
+
+create trigger four before insert on Employee
+for each row 
+begin
+if new.Firstname is NULL or (EXISTS(SELECT 1 FROM Employee WHERE Firstname = NEW.Firstname)) then
+	call `'not possible'`;
+end if;
+end
+
+//while doing a wrong insert
+ERROR 1305 (42000): PROCEDURE 5_triggers.'not possible' does not exist
+
+//while doing proper insert
+Query OK, 1 row affected (0.00 sec);
+
+5.
+
+
+create trigger five before insert on Employee
+for each row
+begin
+	insert into Employeelog values(CurDate(),CURRENT_USER(),"INSERT");
+end//
+
+create trigger five_u before update on Employee
+for each row
+begin
+	insert into Employeelog values(CurDate(),CURRENT_USER(),"UPADTE");
+end//
+
+create trigger five_d before delete on Employee
+for each row
+begin
+	insert into Employeelog values(CurDate(),CURRENT_USER(),"DELETE");
+end//
+
+create table Employeelog (date Date,user varchar(10),action varchar(10));
+
+insert into Employee values(106,"P","PPP","p4@email.com","aaa","CZO",'1995-09-01',9999999990);
+
++------------+------------+--------+
+| date       | user       | action |
++------------+------------+--------+
+| 2018-02-23 | root@local | INSERT |
+| 2018-02-23 | root@local | INSERT |
++------------+------------+--------+
+
+6.
+
+create trigger six before insert on Employee
+for each row 
+begin
+if new.DOJ < 2018-01-01 then
+	call `'not possible'`;
+end if;
+end
+
+mysql> insert into Employee values(106,"G","GGG","g4@email.com","ggg","CGO",'1995-09-01',9999969990);
+ERROR 1305 (42000): PROCEDURE 5_triggers.'not possible' does not exist
+
+mysql> insert into Employee values(106,"G","GGG","g4@email.com","ggg","CGO",'2018-09-01',9999969990);
+Query OK, 1 row affected (0.00 sec)
+
+7.
+
+create trigger seven before insert on Employee
+for each row 
+begin
+if new.Firstname = "John" then
+	call `'not possible'`;
+end if;
+end
+
+insert into Employee values(110,"J","John","john4@email.com","jab","CJO",'1995-09-29',9999979990);
+ERROR 1305 (42000): PROCEDURE 5_triggers.'not possible' does not exist
+
+8.
+
+create trigger eight before update on Employee
+for each row 
+begin
+if (new.Empid <> old.Empid) then
+	call `'I raise an exception'`;
+end if;
+end
+
+update Employee set Empid=111 where Lastname="G";
+ERROR 1305 (42000): PROCEDURE 5_triggers.' I am raising an exception' does not exist
+
+
+9.
+
+
+

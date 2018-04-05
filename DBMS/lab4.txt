@@ -1,0 +1,240 @@
+create table Department(DeptNo integer not null,DeptName varchar(10) not null,Location varchar(15) , primary key (DeptNo));
+
+create table Employee ( EmpNo integer not null, EmpName varchar(20) not null,Sex varchar(1),Salary integer not null,Address varchar(50),DeptNo integer not null, primary key (EmpNo) ,foreign key (DeptNo) references Department(DeptNo));
+
+select * from Employee where Employee.EmpName = name;
+
+
+
+1.
+delimiter //
+
+create procedure one(in no int) 
+begin 
+	select * from Employee where EmpNo = no; 
+end//
+
+delimiter ;
+
+call one(1001);
++-------+---------+------+--------+-------------+--------+
+| EmpNo | EmpName | Sex  | Salary | Address     | DeptNo |
++-------+---------+------+--------+-------------+--------+
+|  1001 | Aaaaa   | M    | 200000 | Hello World |    101 |
++-------+---------+------+--------+-------------+--------+
+
+
+2.
+
+create procedure two(in EmpNo int,in EmpName varchar(10),in Sex varchar(1),in Salary int,in Address varchar(50),in DeptNo int)
+begin
+	insert into Employee values(EmpNo,EmpName,Sex,Salary,Address,DeptNo);
+end//
+
+mysql> delimiter //
+mysql> create procedure two(in EmpNo int,in EmpName varchar(10),in Sex varchar(1),in Salary int,in Address varchar(50),in DeptNo int)
+    -> begin
+    -> insert into Employee values(EmpNo,EmpName,Sex,Salary,Address,DeptNo);
+    -> end//
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> delimiter ;
+mysql> call two(1001,"Aaaaa","M",200000,"Hello World",101);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from Employee;
++-------+---------+------+--------+-------------+--------+
+| EmpNo | EmpName | Sex  | Salary | Address     | DeptNo |
++-------+---------+------+--------+-------------+--------+
+|  1001 | Aaaaa   | M    | 200000 | Hello World |    101 |
++-------+---------+------+--------+-------------+--------+
+
+3.
+
+create procedure raise_sal(in EmpNo int, in Salary_rise int)
+begin
+	update Employee set Employee.Salary = Employee.Salary + Salary_rise where Employee.EmpNo = EmpNo;
+end//
+
+call raise_sal(1001,5000);
+
+select * from Employee;
++-------+---------+------+--------+-------------+--------+
+| EmpNo | EmpName | Sex  | Salary | Address     | DeptNo |
++-------+---------+------+--------+-------------+--------+
+|  1001 | Aaaaa   | M    | 205000 | Hello World |    101 |
++-------+---------+------+--------+-------------+--------+
+
+
+4.
+
+create procedure four_delete(in EmpName varchar(20))
+begin
+	delete from Employee where Employee.EmpName = Empname;
+end//
+
+call four_delete("Aaaaa");
+
+select * from Employee;
+Empty set (0.00 sec)
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++
+mysql> call two(1001,"Aaaaa","M",200000,"Hello World",101);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> call two(1002,"Bbbbb","F",300000,"Hello World South",101);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> call two(1003,"Ccccc","F",100000,"Hello World North",101);
+Query OK, 1 row affected (0.00 sec)
+
+select * from Employee;
++-------+---------+------+--------+-------------------+--------+
+| EmpNo | EmpName | Sex  | Salary | Address           | DeptNo |
++-------+---------+------+--------+-------------------+--------+
+|  1001 | Aaaaa   | M    | 200000 | Hello World       |    101 |
+|  1002 | Bbbbb   | F    | 300000 | Hello World South |    101 |
+|  1003 | Ccccc   | F    | 100000 | Hello World North |    101 |
++-------+---------+------+--------+-------------------+--------+
++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+5.
+
+create function five_max_sal()
+returns integer deterministic 
+begin
+	declare a int;
+	set a = 0; 
+	select max(Employee.Salary) into a from Employee;
+	return a;
+end//
+
+select five_max_sal();
+
++----------------+
+| five_max_sal() |
++----------------+
+|         300000 |
++----------------+
+
+
+6.
+
+create function six_no_of_emp()
+returns integer deterministic 
+begin
+	declare a int;
+	set a =0;
+	select count(Employee.EmpNo) into a from Employee;
+	return a;
+end//
+
+select six_no_of_emp();
++-----------------+
+| six_no_of_emp() |
++-----------------+
+|               3 |
++-----------------+
+
+7.
+create function seven_salary(empno int)
+returns integer deterministic
+begin
+	declare a int;
+	select Employee.Salary into a from Employees where Employee.EmpNo = empno;
+	return a;
+end//
+
+select seven_salary(1002);
++--------------------+
+| seven_salary(1002) |
++--------------------+
+|             300000 |
++--------------------+
+
+select seven_salary(1001);
++--------------------+
+| seven_salary(1001) |
++--------------------+
+|             200000 |
++--------------------+
+
+8.
+
+create function eight_salary(deptno int)
+returns integer deterministic
+begin
+	declare a int;
+	select Avg(Employee.Salary) into a from Employee,Department where Employee.DeptNo = Department.DeptNo and Department.DeptNo = deptno;
+	return a;
+end//
+
+select eight_salary(101);
++-------------------+
+| eight_salary(101) |
++-------------------+
+|            200000 |
++-------------------+
+
+9.
+
+create procedure nine(in deptno int)
+begin
+	select Employee.EmpName as Employee_name from Employee where Employee.DeptNo = deptno;
+end//
+
+call nine(101);
++---------------+
+| Employee_name |
++---------------+
+| Aaaaa         |
+| Bbbbb         |
+| Ccccc         |
++---------------+
+
+10.
+
+create procedure dept_highest(in deptno int,out salary int)
+begin
+	select Max(Employee.Salary) into salary where Employee.DeptNo = deptno;
+end//
+
+create procedure all_dept_highest()
+begin
+	call dept_highest(select Department.DeptNo as dno from Department) 
+
+11.
+
+create function eleven()
+returns integer deterministic
+begin
+	declare number int;
+	select count(Empno) into number from Employee where Salary > 50000;
+	return number;
+end//
+
+select eleven();
++----------+
+| eleven() |
++----------+
+|        5 |
++----------+
+
+12.
+
+create function twelve()
+returns integer deterministic
+begin
+	declare number int;
+	select count(Employee.Empno) into number from Employee,Department where Department.Location = "Chennai" and Department.DeptNo = Employee.DeptNo;
+	return number;
+end//
+
+select twelve() as `no of people working in Chennai`//
++---------------------------------+
+| no of people working in Chennai |
++---------------------------------+
+|                               1 |
++---------------------------------+
+
+

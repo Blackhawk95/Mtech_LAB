@@ -1,0 +1,186 @@
+Tables
+
++---------------------+
+| Tables_in_lab1_bank |
++---------------------+
+| Bank                |
+| Employee            |
+| Manages             |
+| Works               |
++---------------------+
+
+Employee;
++---------------+---------------+-------------+
+| employee-name | street        | city        |
++---------------+---------------+-------------+
+| Jeevan        | first street  | Maharashtra |
+| Rahul         | second street | Rajasthan   |
+| Abhi          | third street  | Kerala      |
+| Arjun         | fourth street | Kerala      |
+| Darth Vader   | fourth street | Maharashtra |
+| Voldemort     | sixth street  | Rajasthan   |
+| Thanos        | sixth street  | Thrichy     |
+| Joker         | eighth street | Kerala      |
+| Yash          | tenth street  | MP          |
+| Sandman       | tenth street  | MP          |
++---------------+---------------+-------------+
+
+Bank;
++-------------+-------------+
+| bank-name   | city        |
++-------------+-------------+
+| SBI         | Thrichy     |
+| Indian Bank | Kerala      |
+| Gramin Bank | Maharashtra |
+| HDFC        | Rajasthan   |
++-------------+-------------+
+
+Works;
++---------------+-------------+--------+
+| employee-name | bank-name   | salary |
++---------------+-------------+--------+
+| Jeevan        | Gramin Bank |  25000 |
+| Rahul         | SBI         |  27000 |
+| Abhi          | HDFC        |  13000 |
+| Arjun         | SBI         |  27000 |
+| Voldemort     | SBI         | 100000 |
+| Darth Vader   | Gramin Bank |  75000 |
+| Thanos        | HDFC        |  50000 |
+| Joker         | SBI         | 100000 |
+| Yash          | Indian Bank |  12000 |
+| Sandman       | Indian Bank |  80000 |
++---------------+-------------+--------+
+
+Manages;
++---------------+--------------+
+| employee-name | manager-name |
++---------------+--------------+
+| Jeevan        | Darth Vader  |
+| Rahul         | Voldemort    |
+| Abhi          | Thanos       |
+| Arjun         | Joker        |
+| Yash          | Sandman      |
++---------------+--------------+
+
+1
+select Employee.`employee-name`,city from Employee,Works  where `bank-name`="SBI" && Employee.`employee-name` = Works.`employee-name`;
+
++---------------+-----------+
+| employee-name | city      |
++---------------+-----------+
+| Rahul         | Rajasthan |
+| Arjun         | Kerala    |
+| Voldemort     | Rajasthan |
+| Joker         | Kerala    |
++---------------+-----------+
+
+2
+select Employee.`employee-name`,street,Employee.city from Employee,Works where `bank-name`="SBI" && salary>14000 && Employee.`employee-name`=Works.`employee-name`;
+
++---------------+---------------+-----------+
+| employee-name | street        | city      |
++---------------+---------------+-----------+
+| Rahul         | second street | Rajasthan |
+| Arjun         | fourth street | Kerala    |
+| Voldemort     | sixth street  | Rajasthan |
+| Joker         | eighth street | Kerala    |
++---------------+---------------+-----------+
+
+3
+select Employee.`employee-name`,Employee.city from Employee,Works,Bank where Employee.`employee-name`=Works.`employee-name` && Employee.city = Bank.city && Works.`bank-name`=Bank.`bank-name`;
+
++---------------+-------------+
+| employee-name | city        |
++---------------+-------------+
+| Jeevan        | Maharashtra |
+| Darth Vader   | Maharashtra |
++---------------+-------------+
+
+4
+select a.`employee-name`,a.street,a.city from Employee a ,Employee b,Manages where a.`employee-name`=Manages.`employee-name` and a.street = b.street and a.city = b.city and not a.`employee-name` = b.`employee-name`;
+
++---------------+--------------+------+
+| employee-name | street       | city |
++---------------+--------------+------+
+| Yash          | tenth street | MP   |
++---------------+--------------+------+
+
+5
+select Employee.`employee-name` from Employee,Works where Works.`bank-name` <> "SBI" && Employee.`employee-name`=Works.`employee-name`;
+
++---------------+
+| employee-name |
++---------------+
+| Jeevan        |
+| Abhi          |
+| Darth Vader   |
+| Thanos        |
+| Yash          |
+| Sandman       |
++---------------+
+
+6
+select `employee-name` from Works where salary > (select max(salary) from Works where `bank-name`="Indian Bank");
+
++---------------+
+| employee-name |
++---------------+
+| Voldemort     |
+| Joker         |
++---------------+
+
+7
+select a.`employee-name` from Works a where salary > ( select avg(b.salary) from Works b where a.`bank-name`=b.`bank-name`);
+
++---------------+
+| employee-name |
++---------------+
+| Voldemort     |
+| Darth Vader   |
+| Thanos        |
+| Joker         |
+| Sandman       |
++---------------+
+
+8
+select `bank-name`, count(`bank-name`) from Works group by `bank-name` order by count(`employee-name`) desc limit 1;
++-----------+--------------------+
+| bank-name | count(`bank-name`) |
++-----------+--------------------+
+| SBI       |                  4 |
++-----------+--------------------+
+
+9
+select `bank-name`,salary from Works order by salary limit 1;
+
++-------------+--------+
+| bank-name   | salary |
++-------------+--------+
+| Indian Bank |  12000 |
++-------------+--------+
+
+10
+select `bank-name` from Works where salary > (select avg(salary) from Works where `bank-name`="SBI") group by `bank-name`;
+
++-------------+
+| bank-name   |
++-------------+
+| Gramin Bank |
+| Indian Bank |
+| SBI         |
++-------------+
+
+11
+SELECT `bank-name`, COUNT(`bank-name`) FROM Works GROUP BY `bank-name` ORDER BY COUNT(`employee-name`);
+
++-------------+--------------------+
+| bank-name   | COUNT(`bank-name`) |
++-------------+--------------------+
+| Gramin Bank |                  2 |
+| Indian Bank |                  2 |
+| HDFC        |                  2 |
+| SBI         |                  4 |
++-------------+--------------------+
+
+
+

@@ -1,0 +1,187 @@
+Hotel //wrong
+
+create table Hotel ( HotelNo integer(3) not null ,Name varchar(20) not null,City varchar(20) not null, primary key(HotelNo) );
+
+
+
+Room //wrong
+
+create table Room ( RoomNo integer(3) not  null,HotelNo integer(3) not null,Type varchar(10) not null,Price integer(10) not null,primary key(RoomNo,HotelNo),foreign key (HotelNo) references Hotel(HotelNo));
+
+
+Guest //wrong
+
+create table Guest ( GuestNo integer(3) not null,GuestName varchar(30) not null,GuestAddress text not null, primary key(GuestNo));
+
+
+Booking
+
+create table Booking ( HotelNo varchar(4) not null, GuestNo integer(5) not null, DateFrom date not null, Dateto date, RoomNo integer(4) not null, primary key(HotelNo,GuestNo,DateFrom), foreign key (HotelNo) references Hotel(HotelNo) , foreign key (GuestNo) references Guest(GuestNo) , foreign key (RoomNo) references Room(RoomNo));
+
+
+
+
+
+2.
+
+insert into Hotel(HotelNo,Name,City) values ('fb01','Grosvenor','London') ,('fb02', 'Watergate', 'Paris'), ('ch01', 'Omni Shoreham' ,  'London'), ('ch02', 'Phoenix Park',  'London') , ('dc01',  'Latham' , 'Berlin' );
+
+insert into Room values (501, 'fb01', 'single', 19 ),(601, 'fb01', 'double', 29) , (701, 'fb01', 'family', 39 ), (1001, 'fb02', 'single', 58), (1101, 'fb02', 'double', 86 ), (1001, 'ch01', 'single', 29.99 ),(1101, 'ch01', 'family', 59.99 ),(701, 'ch02','single', 10 ), (801, 'ch02', 'double', 15 ),(901,'dc01', 'single', 18 ), (1001, 'dc01', 'double', 30 ),(1101, 'dc01', 'family', 35 );
+
+insert into Guest values (10001, 'John Kay', '56 High St, London'),(10002, 'Mike Ritchie', '18 Tain St, London' ),(10003, 'Mary Tregear', '5 Tarbot Rd, Aberdeen' ),(10004,
+'Joe Keogh', '2 Fergus Dr, Aberdeen'),(10005,'Carol Farrel', '6 Achray St, Glasgow' ),(10006, 'Tina Murphy', '63 Well St, Glasgow' ),(10007, 'Tony Shaw', '12 Park Pl, Glasgow' );
+
+insert into Booking values ('fb01', 10001, '04-04-01', '04-04-08', 501),('fb01', 10004, '04-04-15', '04-05-15', 601),('fb01', 10005, '04-05-02','04-05-07', 501),('fb01', 10002,'16-05-04','04-05-29', 601),('fb01', 10001,'04-05-01', null, 701),('fb02', 10005,'04-05-12', '30-05-04', 1101),('ch01', 10006, '04-04-21', null, 1101),('ch02', 10002, '04-04-25','04-05-06', 801),('dc01', 10007, '04-05-13','04-05-15', 1001),('dc01', 10003, '04-05-20', null, 1001);
+
+......................................................
+
+mysql> select * from Room;
++--------+---------+--------+-------+
+| RoomNo | HotelNo | Type   | Price |
++--------+---------+--------+-------+
+|    501 | fb01    | single | 19.00 |
+|    601 | fb01    | double | 29.00 |
+|    701 | fb01    | family | 39.00 |
+|   1001 | fb02    | single | 58.00 |
+|   1101 | fb02    | double | 86.00 |
+|   1001 | ch01    | single | 29.99 |
+|   1101 | ch01    | family | 59.99 |
+|    701 | ch02    | single | 10.00 |
+|    801 | ch02    | double | 15.00 |
+|    901 | dc01    | single | 18.00 |
+|   1001 | dc01    | double | 30.00 |
+|   1101 | dc01    | family | 35.00 |
++--------+---------+--------+-------+
+12 rows in set (0.00 sec)            
+
+mysql> select * from Guest;
++---------+--------------+-----------------------+
+| GuestNo | GuestName    | GuestAddress          |
++---------+--------------+-----------------------+
+|   10001 | John Kay     | 56 High St, London    |
+|   10002 | Mike Ritchie | 18 Tain St, London    |
+|   10003 | Mary Tregear | 5 Tarbot Rd, Aberdeen |
+|   10004 | Joe Keogh    | 2 Fergus Dr, Aberdeen |
+|   10005 | Carol Farrel | 6 Achray St, Glasgow  |
+|   10006 | Tina Murphy  | 63 Well St, Glasgow   |
+|   10007 | Tony Shaw    | 12 Park Pl, Glasgow   |
++---------+--------------+-----------------------+
+7 rows in set (0.00 sec)
+
+mysql> select * from Hotel;
++---------+---------------+--------+
+| HotelNo | Name          | City   |
++---------+---------------+--------+
+| fb01    | Grosvenor     | London |
+| fb02    | Watergate     | Paris  |
+| ch01    | Omni Shoreham | London |
+| ch02    | Phoenix Park  | London |
+| dc01    | Latham        | Berlin |
++---------+---------------+--------+
+5 rows in set (0.00 sec)
+
+mysql> select * from Booking;
++---------+---------+------------+------------+--------+
+| HotelNo | GuestNo | DateFrom   | Dateto     | RoomNo |
++---------+---------+------------+------------+--------+
+| fb01    |   10001 | 2004-04-01 | 2004-04-08 |    501 |
+| fb01    |   10004 | 2004-05-15 | 2004-05-15 |    601 |
+| fb01    |   10005 | 2004-05-02 | 2004-05-07 |    501 |
+| fb01    |   10002 | 2004-05-16 | 2004-05-29 |    601 |
+| fb01    |   10001 | 2004-05-01 | NULL       |    701 |
+| fb02    |   10005 | 2004-05-12 | 2004-05-30 |   1101 |
+| ch01    |   10006 | 2004-04-21 | NULL       |   1101 |
+| ch02    |   10002 | 2004-04-25 | 2004-05-06 |    801 |
+| dc01    |   10007 | 2004-05-13 | 2004-05-15 |   1001 |
+| dc01    |   10003 | 2004-05-20 | NULL       |   1001 |
++---------+---------+------------+------------+--------+
+10 rows in set (0.00 sec)
+
+.............................................................................................
+
+3.
+mysql> select * from Room;
+	after that 
+
++--------+---------+--------+-------+
+| RoomNo | HotelNo | Type   | Price |
++--------+---------+--------+-------+
+|    501 | fb01    | single | 19.95 |
+|    601 | fb01    | double | 30.45 |
+|    701 | fb01    | family | 40.95 |
+|   1001 | fb02    | single | 60.90 |
+|   1101 | fb02    | double | 90.30 |
+|   1001 | ch01    | single | 31.49 |
+|   1101 | ch01    | family | 62.99 |
+|    701 | ch02    | single | 10.50 |
+|    801 | ch02    | double | 15.75 |
+|    901 | dc01    | single | 18.90 |
+|   1001 | dc01    | double | 31.50 |
+|   1101 | dc01    | family | 36.75 |
++--------+---------+--------+-------+
+
+
+4.
+select * from Room where Price < 40.00 && (Type='double' or Type='family');
++--------+---------+--------+-------+
+| RoomNo | HotelNo | Type   | Price |
++--------+---------+--------+-------+
+|    601 | fb01    | double | 30.45 |
+|    801 | ch02    | double | 15.75 |
+|   1001 | dc01    | double | 31.50 |
+|   1101 | dc01    | family | 36.75 |
++--------+---------+--------+-------+
+
+5.
+
+select * from Booking where DateTo is not NULL;
++---------+---------+------------+------------+--------+
+| HotelNo | GuestNo | DateFrom   | Dateto     | RoomNo |
++---------+---------+------------+------------+--------+
+| fb01    |   10001 | 2004-04-01 | 2004-04-08 |    501 |
+| fb01    |   10004 | 2004-05-15 | 2004-05-15 |    601 |
+| fb01    |   10005 | 2004-05-02 | 2004-05-07 |    501 |
+| fb01    |   10002 | 2004-05-16 | 2004-05-29 |    601 |
+| fb02    |   10005 | 2004-05-12 | 2004-05-30 |   1101 |
+| ch02    |   10002 | 2004-04-25 | 2004-05-06 |    801 |
+| dc01    |   10007 | 2004-05-13 | 2004-05-15 |   1001 |
++---------+---------+------------+------------+--------+
+
+6.
+
+7.
+
+8.
+
+select sum(n.Price) from (select h.HotelNo,h.Name,r.Price from Hotel h,Room r,Booking b where h.HotelNo = r.HotelNo and r.RoomNo = b.RoomNo and h.Name = 'Grosvenor' and Datefrom = CurDate()) as n;
+
++--------------+
+| sum(n.Price) |
++--------------+
+|         NULL |
++--------------+
+
+9.
+
+ select temp.HotelNo,temp.RoomNo,Sum(temp.Price) from (select distinct Room.HotelNo as HotelNo,Room.Price as Price,Room.RoomNo as RoomNo from Room,Booking where Booking.HotelNo = Room.HotelNo and Room.RoomNo = Booking.RoomNo and Booking.Dateto is not NULL) as temp,Hotel where temp.HotelNo =Hotel.HotelNo and Hotel.Name = "Grosvenor";
++---------+--------+-----------------+
+| HotelNo | RoomNo | Sum(temp.Price) |
++---------+--------+-----------------+
+| fb01    |    501 |           50.40 |
++---------+--------+-----------------+
+
+
+10.
+select temp.Name as Hotel_Name, Count(temp.RoomNo) as No_of_Rooms from (select Room.RoomNo,Hotel.HotelNo,Hotel.Name from Room,Hotel where Room.HotelNo = Hotel.HotelNo) as temp group by temp.HotelNo;
++---------------+-------------+
+| Hotel_Name    | No_of_Rooms |
++---------------+-------------+
+| Omni Shoreham |           2 |
+| Phoenix Park  |           2 |
+| Latham        |           3 |
+| Grosvenor     |           3 |
+| Watergate     |           2 |
++---------------+-------------+
+
+
+
