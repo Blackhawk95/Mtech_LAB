@@ -58,15 +58,30 @@ removed echo packets which was meant for arpish work, but didnt changed anything
 
 using namespace ns3;
 
+uint32_t countAck = 0;
+UintegerValue ctsThr = UintegerValue (100);
+
+
+
+static void
+CountAck ()
+{ countAck++;
+  if(countAck >=2)
+  {
+  	countAck = 0;
+	ctsThr = ctsThr + 100;  
+  }
+}
+
+
 /// Run single 10 seconds experiment with enabled or disabled RTS/CTS mechanism
-void experiment (bool enableCtsRts,uint16_t nwifisource,bool tracing)
+void experiment (uint16_t nwifisource,bool tracing)
 {
 	
    //LogComponentEnable ("UdpEchoServerApplication", LOG_LEVEL_INFO);
   //uint16_t nwifisource = 10;
   uint16_t nwifisink = nwifisource;
-  // 0. Enable or disable CTS/RTS
-   UintegerValue ctsThr = (enableCtsRts ? UintegerValue (100) : UintegerValue (2200));
+  // 0. Setting CTS/RTS threshold value initially
   Config::SetDefault ("ns3::WifiRemoteStationManager::RtsCtsThreshold", ctsThr);
 
   // 1. Create 3 nodes
@@ -161,6 +176,7 @@ void experiment (bool enableCtsRts,uint16_t nwifisource,bool tracing)
   */
   //Modify EDCA configuration (TXOP limit) for AC_VO
   
+/*
   Ptr<NetDevice> dev = wifiApNode.Get (0)->GetDevice (0);
   Ptr<WifiNetDevice> wifi_dev = DynamicCast<WifiNetDevice> (dev);
   Ptr<WifiMac> wifi_mac = wifi_dev->GetMac ();
@@ -170,10 +186,12 @@ void experiment (bool enableCtsRts,uint16_t nwifisource,bool tracing)
   edca = ptr1.Get<DcaTxop> ();
   //apDevice.EnableLogComponents ();
   //std::cout<<edca->MissedAck(true);
-  
+ */ 
   //TracedCallback m_txTrace;
+	
+	
 
-//Config::ConnectWithoutContext ("/NodeList/0/DeviceList/0/DcaTxop/Cw", MakeCallback (&CwTrace)); //hedit here
+Config::ConnectWithoutContext ("/NodeList/0/DeviceList/0/DcaTxop/MissedAck", MakeCallback (&CountAck));
   
   //k.SetupPhyMacLowListener(p);
 
@@ -283,6 +301,15 @@ void experiment (bool enableCtsRts,uint16_t nwifisource,bool tracing)
     }
   }
 */
+	
+// Changing RTS threshold on the fly
+Ptr<NetDevice> dev = wifiApNode.Get (0)->GetDevice (0);
+Ptr<WifiNetDevice> wifi_dev = DynamicCast<WifiNetDevice> (dev);
+PointerValue tmp;
+wifi_dev->GetAttribute ("WifiRemoteStationManager", tmp);
+Ptr<Object> wrsm = tmp.GetObject (); //wifiremotestationmanager pointer object
+wrsm->SetAttribute("RtsCtsThreshold", UintegerValue (ctsThr));	
+
   // 8. Install FlowMonitor on all nodes
   FlowMonitorHelper flowmon;
   Ptr<FlowMonitor> monitor = flowmon.InstallAll ();
@@ -325,11 +352,11 @@ void experiment (bool enableCtsRts,uint16_t nwifisource,bool tracing)
           std::cout << "  Throughput: " << i->second.rxBytes * 8.0 / 13.0 / 1000 / 1000  << " Mbps\n";
           float prx = (i->second.rxBytes);// / i->second.txBytes);
           float ptx = (i->second.txBytes);
-          std::cout << "  Loss Packets " << (int)(ptx - prx) <<"\n";
+          //std::cout << "  Loss Packets " << (int)(ptx - prx) <<"\n";
           //std::cout << " Loss Packets " << i->second.lostPackets << "\n"; only for 10 seconds
           std::cout << "  PDR " << prx/ptx << "\n";
-          std::cout << "  PLR " << (ptx - prx)/ptx << "\n";
-          std::cout << "  Sum of all Jitter " << (i->second.jitterSum).GetSeconds() << "\n" ;
+          std::cout << "  Collision rate " << (ptx - prx)/13.0 << "\n"; // lost packets/simulation time
+          std::cout << "  End to End delay " << ((i->second.jitterSum).GetSeconds())/nwifisource << "\n" ;
       //  }
     }
 
@@ -358,11 +385,9 @@ int main (int argc, char **argv)
     }
 
 
-  std::cout << "Hidden station experiment with RTS/CTS disabled:\n" << std::flush;
-  experiment (false,nwifisource,tracing);
+  std::cout << "Running:\n" << std::flush;
+  experiment (nwifisource,tracing);
   std::cout << "------------------------------------------------\n";
-  std::cout << "Hidden station experiment with RTS/CTS enabled:\n";
-  experiment (false,nwifisource,tracing);
 
   return 0;
 }
