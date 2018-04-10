@@ -190,7 +190,7 @@ void experiment (uint16_t nwifisource,bool tracing)
   //TracedCallback m_txTrace;
 	
 	
-
+//using a tracesource from DcaTxop which invokes CountAck whenever a packet is missed
 Config::ConnectWithoutContext ("/NodeList/0/DeviceList/0/DcaTxop/MissedAck", MakeCallback (&CountAck));
   
   //k.SetupPhyMacLowListener(p);
