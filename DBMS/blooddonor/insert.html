@@ -1,0 +1,31 @@
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="base.css">
+</head>
+<body>
+<!--creating a form to take in details of new account-->
+<h1>BLOOD DONOR IS</h1>
+<h2>New Donor</h2>
+<form action="insert.php" method="post">
+	Name:
+	<input type="text" name="name"><br>
+	Region:
+	<input type="text" name="region"><br>
+	Phone No:
+	<input type="text" name="phone_no"><br>
+	Blood Group:
+	<!--<input type="text" name="blood_group"><br>-->
+	<select name="blood_group">
+	<option value="A+ve" >A+ve</option>
+	<option value="A-ve">A-ve</option>
+	<option value="B+ve">B+ve</option>
+	<option value="B-ve">B-ve</option>
+	<option value="O+ve">O+ve</option>
+	<option value="0-ve">O-ve</option>
+	<option value="AB+ve">AB+ve</option>
+	<option value="AB-ve">AB-ve</option>
+	</select>
+	<input type="submit" value="Submit">
+</form>
+</body>
+</html>
