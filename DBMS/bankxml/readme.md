@@ -1,4 +1,4 @@
-#same ugly bank using xml
+# same ugly bank using xml
 
 Design an online E-Banking system for Deposit and withdrawal of funds using
 HTML, PHP and MySQL.
