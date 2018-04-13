@@ -3,6 +3,8 @@
 
 </head>
 <body>
+	<h1>BANK</h1>
+<h2>Account details</h1>
 <?php
 error_reporting(E_ALL & ~E_NOTICE);
 $verbose = FALSE;
@@ -33,7 +35,7 @@ if($result->num_rows > 0){
 	}
 	else
 	{
-		echo "ACC_NO not found $param";
+		echo "ACC_NO not found $param <br>";
 	}
 }
 
@@ -41,6 +43,6 @@ if(!empty($_POST) and $acc_no)
 {	getDetails($acc_no);
 }
 ?>
-<a href="index.html">Home</a>
+<a href="index.html"><button type="button">Home</button></a>
 </body>
 </html>
