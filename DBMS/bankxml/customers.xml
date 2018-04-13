@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<customers>
+<customer>
+  <acc_no>100001</acc_no>
+  <name>Jani</name>
+  <branch_name>Reminder</branch_name>
+  <balance>98</balance>
+</customer>
+<customer>
+  <acc_no>100002</acc_no>
+  <name>Jee</name>
+  <branch_name>Divison</branch_name>
+  <balance>11</balance>
+</customer>
+<customer><acc_no>100003</acc_no><name>dfghsdfghj</name><branch_name>sdfgf</branch_name><balance>sadfg</balance></customer><customer><acc_no>100004</acc_no><name>return of the nerds</name><branch_name>dufai</branch_name><balance>9990000</balance></customer><customer><acc_no>100005</acc_no><name>asd</name><branch_name>sd</branch_name><balance>12</balance></customer></customers>
